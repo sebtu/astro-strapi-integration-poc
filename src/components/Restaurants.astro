@@ -4,20 +4,33 @@ import type Restaurant from '@/interfaces/restaurant';
 
 const restaurants = await fetchApi<Restaurant[]>({
   endpoint: 'restaurants',
+  query: {
+    populate: 'logo'
+  },
   wrappedByKey: 'data'
 });
 ---
 <section class="tracking-wide px-10 py-5">
   <h2 class="text-3xl mb-4 font-bold">Restauracje</h2>
 
-  <ul class="list-none">
+  <ul class="list-none space-y-8">
     {restaurants.map((restaurant: any) => (
-      <li class="mb-4">
-        <h3 class="text-xl mb-1 font-bold">{restaurant.name}</h3>
-        <p class="mb-1"><i>{restaurant.Description}</i></p>
-        <address class="whitespace-break-spaces">
-        {restaurant.Address}
-        </address>
+      <li class="grid grid-cols-[200px_1fr] gap-6 items-start">
+        <div class="w-full">
+          <img 
+            src={`${import.meta.env.STRAPI_URL}/${restaurant.logo.url}`} 
+            alt=""
+            class="w-full h-auto object-cover shadow-md"
+          />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-xl font-bold">{restaurant.name}</h3>
+          <p class="italic text-gray-600">{restaurant.description}</p>
+          <address class="whitespace-break-spaces not-italic text-gray-700">
+            {restaurant.street}<br/>
+            {restaurant.city}
+          </address>
+        </div>
       </li>
     ))}
   </ul>
